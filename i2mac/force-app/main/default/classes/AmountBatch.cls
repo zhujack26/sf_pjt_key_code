@@ -29,8 +29,7 @@ global class AmountBatch implements Database.Batchable<sObject> {
         for (OrderItem item : scope) {
             Id contactId = orderToContactMap.get(item.OrderId);
             if(contactId == null) continue; // 연결된 Contact가 없는 경우 건너뜀
-        
-            Decimal price = item.TotalPrice;
+
             Contact contactToUpdate = contactsToUpdateMap.get(contactId);
             if(contactToUpdate == null) {
                 contactToUpdate = new Contact(Id = contactId);
@@ -38,9 +37,9 @@ global class AmountBatch implements Database.Batchable<sObject> {
             }
             
             if(item.Product2.Family == 'BodyPart') {
-                contactToUpdate.BodyPart_Amount__c = (contactToUpdate.BodyPart_Amount__c == null ? 0 : contactToUpdate.BodyPart_Amount__c) + price;
+                contactToUpdate.BodyPart_Amount__c = (contactToUpdate.BodyPart_Amount__c != null ? contactToUpdate.BodyPart_Amount__c : 0) + item.TotalPrice;
             } else if(item.Product2.Family == 'SubPart') {
-                contactToUpdate.SubPart_Amount__c = (contactToUpdate.SubPart_Amount__c == null ? 0 : contactToUpdate.SubPart_Amount__c) + price;
+                contactToUpdate.SubPart_Amount__c = (contactToUpdate.SubPart_Amount__c != null ? contactToUpdate.SubPart_Amount__c : 0) + item.TotalPrice;
             }
         }
 
