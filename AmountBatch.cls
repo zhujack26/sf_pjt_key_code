@@ -59,7 +59,6 @@ global class AmountBatch implements Database.Batchable<sObject> {
 
 
 /*
-바로 확인 방법
-AmountBatch myBatch = new AmountBatch();
-Database.executeBatch(myBatch);
+devconsole
+Database.executeBatch(new AmountBatch());
 */
