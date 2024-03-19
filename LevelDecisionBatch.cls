@@ -1,4 +1,3 @@
-global class LevelDecisionBatch implements Database.Batchable<sObject> {
     
     global Database.QueryLocator start(Database.BatchableContext BC) {
         Date recentNinetyDays = System.today().addDays(-90);
@@ -12,18 +11,19 @@ global class LevelDecisionBatch implements Database.Batchable<sObject> {
 
     global void execute(Database.BatchableContext BC, List<Contact> scope) {
         for (Contact contact : scope) {
+            // 널 값 체크 및 기본값 할당
             Decimal bodyPartAmount = contact.BodyPart_Amount__c != null ? contact.BodyPart_Amount__c : 0;
             Decimal subPartAmount = contact.SubPart_Amount__c != null ? contact.SubPart_Amount__c : 0;
             Decimal totalAmount = bodyPartAmount + subPartAmount;
 
             if (totalAmount >= 5000000) {
-                contact.Level__c = 'RatingA';
+                contact.Level__c = 'A등급';
             } else if (totalAmount >= 2000000) {
-                contact.Level__c = 'RatingB';
+                contact.Level__c = 'B등급';
             } else if (totalAmount > 0) {
-                contact.Level__c = 'RatingC';
+                contact.Level__c = 'C등급';
             } else {
-                contact.Level__c = 'RatingD';
+                contact.Level__c = 'D등급';
             }
         }
         update scope;
@@ -33,6 +33,6 @@ global class LevelDecisionBatch implements Database.Batchable<sObject> {
     }
 }
 /* 실행
-LevelDecisionBatch levelBatch = new LevelDecisionBatch();
-Database.executeBatch(levelBatch);
+Developer Console
+Database.executeBatch(new LevelDecisionBatch());
 */
